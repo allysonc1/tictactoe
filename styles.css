@@ -13,7 +13,6 @@ p{
 h1{
 	color: #00FF00;
 	font-size: 60px;
-	text-align: center;
 }
 
 #board{
@@ -25,10 +24,7 @@ h1{
 
 }
 
-#message{
-	font-size: 40px;
-	min-height: 80px;
-}
+
 
 
 .square{
@@ -42,4 +38,13 @@ h1{
 
 .square:hover{
 	background-color: #ff0;
+}
+
+#message{
+	font-size: 40px;
+	min-height: 80px;
+}
+.winning-square{
+	background-color: lightblue;
+	color: green;
 }

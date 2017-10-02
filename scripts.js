@@ -1,6 +1,4 @@
 
-// 
-
 // 1. set up board
 // 2. user should be able to click on a button. when that happens, the square should have that player's mark.
 // 3. When it's Xs turn, put an x in it. When it's Os turn, put an O in.
@@ -10,11 +8,7 @@
 
 // GLOBALS
 var whosTurn = 1;  // player 1's turn on start
-
-// 2 things happen when someone clicks. 
-// 1 - change dom for user. 
-// 2. change the vars for JS.
-
+var gameOver = false;
 var player1Squares = [];
 var player2Squares = [];  // or create an object and put these two vars inside it 
 var winningCombos = [
@@ -28,73 +22,69 @@ var winningCombos = [
 	['A3', 'B2', 'C3'], // DIAG 2
 ];
 
-
 function markSquare(squareClicked){
-	// console.log(squareClicked.innerHTML)
-	if (squareClicked.innerHTML !== ' '){
+	if (squareClicked.innerHTML !== '-'){
 		document.getElementById('message').innerHTML = "Sorry, that square is already taken."
 	}else if (whosTurn == 1){
 		squareClicked.innerHTML = 'X';
 		whosTurn = 2;
 		player1Squares.push(squareClicked.id)
-		console.log(player1Squares)
-		document.getElementById('message').innerHTML = ""		
+		// console.log(player1Squares)
+		document.getElementById('message').innerHTML = `${squareClicked.id}`	
+		checkWin(player1Squares, 1);		
 	}else{
 		squareClicked.innerHTML = 'O';
 		whosTurn = 1;
 		player2Squares.push(squareClicked.id)
-		document.getElementById('message').innerHTML = ""		
-
-		console.log(player2Squares)
+		document.getElementById('message').innerHTML = `${squareClicked.id}`			
+		checkWin(player2Squares, 2);	
+		// console.log(player2Squares)
 	}
+}		// end markSquare
 
-	checkWin();	
-}
-
-
-function checkWin(){
-	// OUTER LOOP - check each winning combination
+function checkWin(currentPlayerSquares,whoJustMarked ){
 	for (let i = 0; i < winningCombos.length; i++){
 		var squareCount = 0;
-		console.log(winningCombos[i], "winningCombos sub i", i)
-	// INNER LOOP - check a square inside a winning combination
+		// console.log(winningCombos[i], "winningCombos sub i", i)
 		for (let j = 0; j < winningCombos[i].length; j++){
 			var winningSquare = winningCombos[i][j];
-			console.log(winningSquare, "winningSquare")
+			// console.log(winningSquare, "winningSquare", winningCombos[i].length, "length of current combo")
 			if (player1Squares.indexOf(winningSquare) !== -1){
-				// the square belongs to the player
 				squareCount++;
 			}
 		}   // end of j loop (row/diag/column complete)
-		// check to see if the squareCount = 3
 		if (squareCount === 3){
-			console.log("player1 won the game");
+			endGame(winningCombos[i], whoJustMarked);
+			break;
 		}
 	}
-}
+}		// end checkWin(); function
 
+function endGame(winningCombo, whoJustMarked){
+	console.log(`player ${whoJustMarked} won the game`);
+	gameOver = true;
+	
+	for (let i = 0; i < winningCombo.length; i++) {
+		// var theSquare = document.getElementById(winningCombo[i])
+		// console.dir(theSquare)
+		document.getElementById(winningCombo[i]).className += 'winning-square';
+	}
+}		// end endGame(); function
 
-// squares is an array with 9 objects. each object is the js representation of the html tag.
 var squares = document.getElementsByClassName('square');
-console.log(squares[0]);
 
+for (let k=0; k < squares.length; k++){
+	//console.log(squares, squares.length, i)
 
-for (let i=0; i < squares.length; i++){
-	console.log(squares[i])
-
-// Now that we have each square individually (squares[i]), we will add a click listener 
-
-// adding an event liste ner:
-// 1. what to listen to:
-// 2. addEventListener
-// 3. first arg: what event
-// 4. second arg: code to run if event happens
-
-squares[i].addEventListener('click', function(event){
-	console.log(this);
-	// call the mark square function and pass the square they clicked on
-	markSquare(this);
-});
+	squares[k].addEventListener('click', function(event){
+		if(gameOver){
+			console.log(gameover, "game is over");
+			
+		}else{
+			markSquare(this);
+			console.log("GAMES NOT OVER", gameOver);
+		}
+	});
 }
 
 
